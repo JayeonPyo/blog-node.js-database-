@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= post.title %></title>
+    </head>
+    <body>
+        <h2><%= post.title %></h2>
+        조회수: <%= post.view_count %><br>
+        추천수: <%= post.recommend_count %><br>
+        <hr>
+        <%- post.content -%>
+        
+        <br><br>
+        <a href="/post/<%= post.id %>/recommend">이 게시물 추천하기</a>
+        <h3>댓글 목록(<%= comments.length %>)</h3>
+        <hr>
+        <% for(var comment of comments) { %>
+            <%= comment.user_id %>: <%= comment.content %>
+            <!-- 내가 작성한 댓글이면 삭제하기 -->
+            <% if(user_id == comment.user_id) { %>
+                <a href="/comment/<%= comment.id %>/delete?post_id=<%= post.id%>">댓글 삭제</a>
+            <% } %>
+            <br>
+        <% } %>
+        <br>
+        <% if(locals.user_id) {  %>
+            댓글 작성하기<br>
+            <form action="/post/<%= post.id %>/comments" method="POST">
+                내용: <input type="text" name="content"><br>
+                <input type="submit" value="작성하기">
+            </form>
+        <% } else { %>
+            댓글을 남기시려면 로그인해주세요.<br>
+            <a href="/login">로그인하러 가기.</a>
+        <% } %>
+    </body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>관리자 댓글 목록</title>
+    </head>
+    <body>
+        <h1>(관리자) 댓글 목록(<%= page %> / <%= max_page %>)</h1>
+        <a href="/admin">돌아가기</a>
+        <form method="GET" action="/admin/comments">
+            <input type="text" name="query">
+            <input type="submit" value="검색">
+        </form>
+        <hr>
+        <% for(var comment of comments) { %>
+            <%= comment.user_id %>: <%= comment.content %><br>
+            <a href="/admin/comment/<%= comment.id %>/delete">삭제하기</a><br>
+            <br>
+        <% } %>
+        <a href="/admin/comments/<%= page - 1%>">이전 페이지</a><br>
+        <% for(var i=-5; i<5; i++) { %>
+            <% 
+                var p = page + i;
+                if(p <= 0 || p > max_page)
+                    continue;
+            %>
+
+            <% if(i != 0) { %>
+                <a href="/admin/comments/<%= p %>"><%= p %></a>
+            <% } else { %>
+                <%= p %>
+            <% } %>
+            &nbsp;
+        <% } %>
+        <br>
+        <a href="/admin/comments/<%= page + 1%>">다음 페이지</a>
+
+    </body>
+</html>

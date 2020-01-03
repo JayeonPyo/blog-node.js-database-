@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>관리자 게시물 보기</title>
+    </head>
+    <body>
+        <h1>(관리자) 게시물 목록(<%= page %> / <%= max_page %>)</h1>
+        <a href="/admin">돌아가기</a>
+        <form method="GET" action="/admin/posts">
+            <input type="text" name="query">
+            <input type="submit" value="검색">
+        </form>
+        <hr>
+        <% for(var post of posts) { %>
+            <%= post.id %>. <a href="/post/<%= post.id %>"><%= post.title %></a><br>
+            <a href="/admin/post/<%= post.id %>/modify">수정하기</a> <a href="/admin/post/<%= post.id %>/delete">삭제하기</a><br>
+            <br>
+        <% } %>
+
+        <% for(var i=-5; i<5; i++) { %>
+            <% 
+                var p = page + i;
+                if(p <= 0 || p > max_page)
+                    continue;
+            %>
+
+            <% if(i != 0) { %>
+                <a href="/admin/posts/<%= p %>"><%= p %></a>
+            <% } else { %>
+                <%= p %>
+            <% } %>
+            &nbsp;
+        <% } %><br>
+        <% if(page > 1){ %>
+        <a href="/admin/posts/<%= page - 1%>">이전 페이지</a>
+        <% } %>
+        <% if(page < max_page){ %>
+        <a href="/admin/posts/<%= page + 1%>">다음 페이지</a>
+        <% } %>
+
+    </body>
+</html>
