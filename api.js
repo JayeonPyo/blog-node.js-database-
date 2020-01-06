@@ -194,10 +194,10 @@ exports.post = {
 
     // body에 있는 내용으로 새로운 게시물 작성
     //next(err,post_id)
-    create: function(db, title, content, next) {
-        var query = "INSERT INTO post(title, content) VALUES(?, ?) ";
+    create: function(db, user_id,title, content,next) {
+        var query = "INSERT INTO post(user_id,title, content) VALUES(?,?,?) ";
         var stmt = db.prepare(query);
-        stmt.run(title,content, function(err){
+        stmt.run(user_id,title,content, function(err){
         next(err,this.lastID);
         });
         stmt.finalize();
@@ -205,10 +205,10 @@ exports.post = {
     },
 
     // body에 있는 내용으로 id 게시물 변경
-    modify: function(db, id, title, content, next) {
-        var query = "UPDATE post SET title=?, content=? WHERE id = ?";
+    modify: function(db, id, user_id, title, content, next) {
+        var query = "UPDATE post SET user_id=?, title=?, content=? WHERE id = ?";
         var stmt = db.prepare(query);
-        stmt.run(title,content,id, function(err) {
+        stmt.run(user_id, title, content,id, function(err) {
             next(err);
         });
         stmt.finalize();

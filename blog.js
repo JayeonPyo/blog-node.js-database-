@@ -35,6 +35,67 @@ app.get("/", function(req, res) {
     res.render("index.ejs", obj);
 });
 
+
+// 일반 사용자 게시물 작성하기
+app.get("/user/write", function(req, res) {
+    //admin이 아닐 경우
+   
+    res.render("user_write.ejs");
+});
+
+// 게시물 작성 POST 요청
+// title: 제목
+// content: 내용
+app.post("/user/write", function(req, res) {
+
+    api.post.create(db, req.body.user_id,req.body.title, req.body.content, function(err, post_id) {
+        if(err) {
+            res.sendStatus(500);
+        } else {
+            res.redirect("/post/" + post_id);
+        }
+    })
+});
+// 게시물 수정하기 페이지
+app.get("/post/:id/modify", function(req, res) {
+ 
+    api.post.get(db, req.params.id, function(err, result) {
+        if(err) {
+            res.sendStatus(500);
+        }
+        else if(result) {
+            res.render("user_modify.ejs", result.post);
+        }
+        else {
+            res.sendStatus(404);
+        }
+    });
+});
+
+//// 게시물 수정 요청
+app.post("/post/:id/modify", function(req, res) {
+
+    api.post.modify(db, req.params.id,req.body.user_id, req.body.title, req.body.content, function(err) {
+        if(err) {
+            res.sendStatus(500);
+        } else {
+            res.redirect("/posts/1");
+        }
+    });
+});
+
+//// 게시물 삭제하기
+app.get("/post/:id/delete", function(req, res) {
+
+    api.post.delete(db, req.params.id, function(err) {
+        if(err) {
+            res.sendStatus(500);
+        } else {
+            res.redirect("/posts/1");
+        }
+    });
+});
+
 // 게시물 목록 가져오기
 // query 값 목록
 // * sort

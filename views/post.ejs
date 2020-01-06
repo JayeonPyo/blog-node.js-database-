@@ -5,8 +5,16 @@
     </head>
     <body>
         <h2><%= post.title %></h2>
+        사용자명 : <%= post.user_id %><br>
         조회수: <%= post.view_count %><br>
         추천수: <%= post.recommend_count %><br>
+   
+            <% if(user_id == post.user_id) { %>
+             <a href="/post/<%= post.id %>/modify">수정하기</a> <a href="/post/<%= post.id %>/delete">삭제하기</a><br>
+            <% } %>
+      
+            <br>
+      
         <hr>
         <%- post.content -%>
         

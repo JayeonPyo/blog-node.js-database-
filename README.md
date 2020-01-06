@@ -20,3 +20,9 @@ node blog.js
 ```
 접속 port: 3000
 ### 
+
+rm test.db
+
+
+sqlite3 test.db < schema.sql 한 뒤
+sqlite3 test.db

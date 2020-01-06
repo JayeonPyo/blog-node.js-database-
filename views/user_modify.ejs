@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>일반 사용자 게시물 수정</title>
+    </head>
+    <body>
+        <h2>게시물 수정하기</h2>
+        <a href="/">돌아가기</a><br>
+        <hr>
+        <form method="POST" action="/post/<%= id %>/modify">
+            글쓴이: <input type="text" name="user_id" value="<%= user_id %>"><br>
+            제목: <input type="text" name="title" value="<%= title %>"><br>
+            내용<br>
+            <textarea name="content"><%= content %></textarea><br>
+            <input type="submit" value="작성">
+            
+                
+                <a href="/post/<%= id %>/delete">삭제하기</a><br>
+                <br>
+        
+        </form>
+    </body>
+</html>
