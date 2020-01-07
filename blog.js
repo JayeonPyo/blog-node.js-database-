@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", function(req, res) {
     obj = {
         user_id: req.session.user_id || null,
-        message: req.query.message
+        message: req.query.message,
     }
     res.render("index.ejs", obj);
 });
@@ -216,6 +216,29 @@ app.get("/comment/:comment_id/delete", function(req, res) {
     }
 })
 
+//댓글 수정
+app.get("/comment/:comment_id/modify", function(req, res) {
+    var user_id = req.session.user_id || null;
+    if(user_id) {
+        var post_id = req.query.post_id;
+        var comment_id = req.params.comment_id;
+        if(req.query.content){
+            var content=req.query.content
+        }
+        else{
+            var content='왜안돼 ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ'            
+        }
+        var content=req.query.content;
+        api.comment.modify(db, user_id, comment_id,content,function(err, result) {
+            res.redirect("/post/" + post_id);    
+        })
+    }
+    else {
+        // 401 Unauthorized
+        res.sendStatus(401);
+    }
+})
+
 // 로그인 페이지 가져오기
 app.get("/login", function(req, res) {
     res.render("login.ejs", req.query);
@@ -343,32 +366,64 @@ app.post("/admin/login", function(req, res) {
     var id = req.body.id;
     var pw = req.body.password;
 
-    api.admin.login(db, id, pw, function(err, result) {
-        if(err) {
-            res.sendStatus(500);
-        }
-        else if(result) {
-            req.session.user_id = id;
-            req.session.is_admin = true;
-            res.redirect("/admin");
-        }
-        else {
-            res.redirect(url.format({
-                pathname: "/admin/login",
-                query: {
-                    message: "잘못된 ID 혹은 비밀번호입니다."
-                }
-            }));
-        }
-    })
     
-});
+        api.admin.login(db, id, pw, function(err, result) {
+            if(err) {
+                res.sendStatus(500);
+            }
+            else if(result) {
+                req.session.user_id = id;
+                req.session.is_admin = true;
+                res.redirect("/admin");
+            }
+            else {
+                res.redirect(url.format({
+                    pathname: "/admin/login",
+                    query: {
+                        message: "잘못된 ID 혹은 비밀번호입니다."
+                    }
+                }));
+            }
+        })
+        
+    });
+   
+   
+    
+
 
 // 관리자 로그아웃
 app.get("/admin/logout", function(req, res) {
     req.session.destroy(function(err){
         res.redirect("/admin");
     })
+});
+
+//관리자 비밀번호 재설정
+app.get("/admin/change", function(req, res) {
+
+    res.render("admin_change.ejs");
+    
+});
+
+
+app.post("/admin/change", function(req, res) {
+    
+    var id = req.body.id;
+    var pw = req.body.password;
+    var repw = req.body.repassword;
+
+    api.admin.change(db, id, repw, function(err, result) {
+        if(err) {
+            res.sendStatus(500);
+        }
+        else {
+            res.redirect(url.format({
+                pathname: "/admin/login"
+            }));
+        }
+    })
+    
 });
 
 // 게시물 작성하기

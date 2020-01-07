@@ -13,6 +13,7 @@
         <hr>
         <% for(var user of users) { %>
             <%= user.id %><br>
+            <%= user.created_at %>
             <a href="/admin/user/<%= user.id %>/delete">삭제하기</a><br>
             <br>
         <% } %>

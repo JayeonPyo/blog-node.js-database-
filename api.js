@@ -91,6 +91,7 @@ exports.user = {
     }
 }
 
+
 exports.post = {
 
     get_list: function(db, query, next) {
@@ -238,7 +239,6 @@ exports.comment = {
         })
         stmt.finalize();
     },
-
     delete: function(db, user_id, comment_id, next) {
         var query = "DELETE FROM comment WHERE user_id = ? AND id =? ";
         var stmt = db.prepare(query);
@@ -250,13 +250,22 @@ exports.comment = {
         stmt.finalize();
         
     },
-
-    delete_by_admin: function(db, comment_id, next) {
+    modify: function(db, user_id, comment_id,  content, next) {
+        var query = "UPDATE comment SET content=? WHERE user_id = ? AND id =?" ;
+        var stmt = db.prepare(query);
+        stmt.run(content,user_id,comment_id, function(err) {
+            next(err);
+        });
+        stmt.finalize();
         
     },
 
+    delete_by_admin: function(db, comment_id, next) {
+         
+    },
+
     get_list: function(db, query, next) {
-        
+         
     },
 };
 
@@ -268,6 +277,20 @@ exports.admin = {
             + "id=? AND password=? AND is_admin = 1;";
             var stmt = db.prepare(query);
             stmt.all(id,password,function(err,result){
+                next(err,result);
+            });
+            stmt.finalize();
+        });
+        
+    },
+
+    
+    change: function(db, id,repassword, next) {
+        db.serialize(function(){
+            var query = "UPDATE user SET " 
+            + "password=?  WHERE id = ? AND is_admin = 1";
+            var stmt = db.prepare(query);
+            stmt.run(repassword,id,function(err,result){
                 next(err,result);
             });
             stmt.finalize();

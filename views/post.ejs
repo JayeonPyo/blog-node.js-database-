@@ -10,7 +10,7 @@
         추천수: <%= post.recommend_count %><br>
    
             <% if(user_id == post.user_id) { %>
-             <a href="/post/<%= post.id %>/modify">수정하기</a> <a href="/post/<%= post.id %>/delete">삭제하기</a><br>
+                <%= post.id %>. <a href="/post/<%= post.id %>/modify">수정하기</a> <a href="/post/<%= post.id %>/delete">삭제하기</a><br>
             <% } %>
       
             <br>
@@ -24,15 +24,24 @@
         <hr>
         <% for(var comment of comments) { %>
             <%= comment.user_id %>: <%= comment.content %>
+    
             <!-- 내가 작성한 댓글이면 삭제하기 -->
             <% if(user_id == comment.user_id) { %>
+                
+
                 <a href="/comment/<%= comment.id %>/delete?post_id=<%= post.id%>">댓글 삭제</a>
+                <form action="/comment/<%= comment.id %>/modify" method="GET">
+                    내용: <input type="text" name="content">
+                    <input type="text" name='post_id' value="<%= post.id%>" style="opacity: 0;" ><br>
+                    <input type="submit" value="작성하기">
+                </form>
+                
             <% } %>
-            <br>
+             <br>
         <% } %>
         <br>
         <% if(locals.user_id) {  %>
-            댓글 작성하기<br>
+            <h3>댓글 작성하기</h3>
             <form action="/post/<%= post.id %>/comments" method="POST">
                 내용: <input type="text" name="content"><br>
                 <input type="submit" value="작성하기">
