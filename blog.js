@@ -446,7 +446,7 @@ app.post("/admin/write", function(req, res) {
         return;
     }
 
-    api.post.create(db, req.body.title, req.body.content, function(err, post_id) {
+    api.post.create(db,req.body.user_id,req.body.title, req.body.content, function(err, post_id) {
         if(err) {
             res.sendStatus(500);
         } else {
@@ -516,7 +516,7 @@ app.post("/admin/post/:id/modify", function(req, res) {
         return;
     }
 
-    api.post.modify(db, req.params.id, req.body.title, req.body.content, function(err) {
+    api.post.modify(db, req.params.id,req.body.user_id, req.body.title, req.body.content, function(err) {
         if(err) {
             res.sendStatus(500);
         } else {
@@ -570,6 +570,7 @@ app.get("/admin/users/:page", function(req, res) {
         if(err) {
             res.sendStatus(500);
         } else {
+            result.page = page;
             res.render("admin_users.ejs", result);
         }
     });

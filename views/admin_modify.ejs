@@ -8,12 +8,15 @@
         <a href="/admin/">돌아가기</a><br>
         <hr>
         <form method="POST" action="/admin/post/<%= id %>/modify">
+            글쓴이: <input type="text" name="user_id" value="<%= user_id %>"><br>
             제목: <input type="text" name="title" value="<%= title %>"><br>
             내용<br>
             <textarea name="content"><%= content %></textarea><br>
             <input type="submit" value="작성">
 
       
+
+            <a href="/post/<%= id %>/delete">삭제하기</a><br>
         </form>
     </body>
 </html>

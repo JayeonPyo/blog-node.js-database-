@@ -29,18 +29,17 @@ exports.user = {
         
         
         var query = "SELECT * FROM user " +
-                " WHERE is_ admin = 0 " +
                 "ORDER BY created_at DESC, id DESC " + 
                 "LIMIT ?, ?";
         var stmt = db.prepare(query);
-        stmt.all(page * count_per_page, count_per_page,  function(err, rows) {
+        stmt.all(page * count_per_page, count_per_page, 
+             function(err, rows) {
             users = rows;
         });
         stmt.finalize();
 
 
-        var query = "SELECT COUNT(*) / ? + 1 AS max_page FROM user "
-        + " WHERE is_ admin = 0 " ;
+        var query = "SELECT COUNT(*) / ? + 1 AS max_page FROM user" ;
         
         stmt = db.prepare(query);
         stmt.all(count_per_page, function(err, rows){
@@ -261,10 +260,50 @@ exports.comment = {
     },
 
     delete_by_admin: function(db, comment_id, next) {
+        var query = "DELETE FROM comment WHERE id=?";
+        var stmt = db.prepare(query);
+        stmt.run(comment_id, function(err){
+            next(err);
+        });
+        stmt.finalize();
          
     },
 
     get_list: function(db, query, next) {
+        var comments = null;
+        var page = parseInt(query.page || "1") - 1;
+        var count_per_page = 5;
+        
+        
+        var query = "SELECT * FROM comment " +
+                "ORDER BY created_at DESC, id DESC " + 
+                "LIMIT ?, ?";
+        var stmt = db.prepare(query);
+        stmt.all(page * count_per_page, count_per_page, 
+            function(err, rows) {
+            comments = rows;
+        });
+        stmt.finalize();
+
+        // 최대 페이지 개수를 가져옴.
+        var query = "SELECT COUNT(*) / ? + 1 AS max_page FROM comment";
+        stmt = db.prepare(query);
+        stmt.all(count_per_page, function(err, rows){
+
+            if(err) {
+                next(err, null);
+            }
+            else {
+                var result = {
+                    page: page + 1,
+                    max_page: rows[0].max_page,
+                    comments: comments
+                };
+    
+                next(null, result);
+            }
+        })
+        stmt.finalize();
          
     },
 };
