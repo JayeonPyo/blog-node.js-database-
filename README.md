@@ -22,8 +22,9 @@ sqlite3 blog.db < sample_dumps.sql
 ### 3. 실행 및 접속
 ```
 node blog.js
+localhost:3000
 ```
-접속 port: 3000
+
 ### 
 
 
