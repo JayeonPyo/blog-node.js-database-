@@ -1,5 +1,10 @@
 
-node.js
+
+<h1> 
+  node.js와 sqlite3을 이용한 카페 만들기(only js) > 소수전공
+</h1>
+
+
 ### 코드 받기
 ```
 git clone https://github.com/HeegyuKim/simple-nodejs-blog.git
@@ -21,8 +26,10 @@ node blog.js
 접속 port: 3000
 ### 
 
+
+### window 위에서 실행 데이터베이스 삭제 및 생성, 읽기
+```
 rm test.db
-
-
-sqlite3 test.db < schema.sql 한 뒤
 sqlite3 test.db
+.read schema.sql
+```
